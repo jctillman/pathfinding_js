@@ -2,7 +2,7 @@ const React = require('react');
 const Cell = require('./cell.js');
 
 const Graph = require('../graph.js');
-const boardMaker = require('../boardMaker');
+const boardMaker = require('../utils/boardMaker');
 const pathFinders = require('../pathfinders');
 //const consts = require('../consts');
 
@@ -72,9 +72,8 @@ module.exports = class App extends React.Component{
 		const w = this.state.board[0].length;
 		const board = this.state.board;
 
-		var vertices = boardMaker.makeVertices(h, w);
 		var neighborFn = boardMaker.makeNeighborFn(board);
-		var graph = new Graph(vertices, neighborFn);
+		var graph = new Graph(neighborFn);
 
 		var [path, exploredOrOpen] = fnc(graph, this.start, this.end)
 		

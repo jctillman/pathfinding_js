@@ -1,20 +1,28 @@
-
+//TEST SPEC FOR "PATHFINDERS.jS"
+//"pathfinders.js" is the only file that needs
+//to be modified for the tutorial.
+//
+//You may wish to look at graph.js, to understand what that does
+//but if you look anywhere else that will be useless.
 var expect = require('chai').expect;
 var Graph = require('./graph.js');
 
+//Pulling functions from pathfinders.
 var pathFinders = require('./pathfinders.js');
 var dijkstra = pathFinders.dijkstra;
 var astar = pathFinders.astar;
 
-
-var maxCost = 100000;
-
-var lineVertices = [1,2,3,4,5,6,7];
+/* Both dijkstra and astar find the lowest-cost paths
+   across graphs.  Thus, it makes sense to write them to interact with
+   a small graph class.  The following creates two instances of a
+   graph class: one represents a 1d line, the other represents a 2d plane.
+*/
+//LINE GRAPH -- Represents a 1d line, that one can travel up and down.
+//
 var lineNeighborFn = function(vert){
 	return [ {neighbor: vert+1, cost:1}, {neighbor: vert-1, cost:1}  ]; };
-var lineGraph = new Graph(lineVertices, lineNeighborFn);
+var lineGraph = new Graph(lineNeighborFn);
 
-var planeVertices = [[1,1],[1,2],[2,1],[2,2]];
 var planeNeighborFn = function(vert){
 	var neighbors = [];
 	(vert[0] > 1) && neighbors.push({neighbor: [vert[0]-1, vert[1]], cost: 1});
@@ -22,7 +30,7 @@ var planeNeighborFn = function(vert){
 	(vert[1] > 1) && neighbors.push({neighbor: [vert[0], vert[1]-1], cost: 1});
 	(vert[1] < 3) && neighbors.push({neighbor: [vert[0], vert[1]+1], cost: 1});
 	return neighbors;}
-var planeGraph = new Graph(planeVertices, planeNeighborFn);
+var planeGraph = new Graph(planeNeighborFn);
 
 
 describe("Dijkstra finds paths", function(){
@@ -218,29 +226,12 @@ describe('astar finds paths', function(){
 
 		it("It can return the path for a simple 1d route", function(){
 
-			var lineVertices = [1,2,3,4,5,6,7];
-			var lineNeighborFn = function(vert){
-				return [ {neighbor: vert+1, cost:1}, {neighbor: vert-1, cost:1}  ]; 
-			};
-			var lineGraph = new Graph(lineVertices, lineNeighborFn);
-
 			var [path,_] = astar(lineGraph, 1, 7);
 			expect(path).to.deep.equal([1,2,3,4,5,6,7])
 
 		});
 
 		it('It can return the path for a simple 2d route', function(){
-
-			var planeVertices = [[1,1],[1,2],[2,1],[2,2]];
-			var planeNeighborFn = function(vert){
-				var neighbors = [];
-				(vert[0] > 1) && neighbors.push({neighbor: [vert[0]-1, vert[1]], cost: 1});
-				(vert[0] < 3) && neighbors.push({neighbor: [vert[0]+1, vert[1]], cost: 1});
-				(vert[1] > 1) && neighbors.push({neighbor: [vert[0], vert[1]-1], cost: 1});
-				(vert[1] < 3) && neighbors.push({neighbor: [vert[0], vert[1]+1], cost: 1});
-				return neighbors;
-			}
-			var planeGraph = new Graph(planeVertices, planeNeighborFn);
 			var [pathOne,_] = astar(planeGraph, [1,1], [1,3]);
 			var [pathTwo,_] = astar(planeGraph, [3,1], [1,1]);
 			expect(pathOne).to.deep.equal([[1,1],[1,2],[1,3]])

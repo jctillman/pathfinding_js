@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha src/minimax_specs.js",
+    "test": "mocha src/pathfinders_specs.js",
     "start": "webpack-dev-server --content-base ./public"
   },
   "author": "James Tillman <James.Tillman.7@gmail.com> (https://github.com/jctillman)",

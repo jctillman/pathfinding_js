@@ -10,6 +10,15 @@ module.exports = {
 		}
 		return blank;
 	},
+	makeVertices: (height, width) => {
+		var blank = []
+		for (var y = 0; y < height; y++){
+			for (var x = 0; x < width; x++){
+				blank.push([y,x])
+			}
+		}
+		return blank;
+	},
 	makeNeighborFn: (originBoard) => {
 		const board = JSON.parse(JSON.stringify(originBoard));
 		const h = board.length;
