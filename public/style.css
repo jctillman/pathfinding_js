@@ -1,0 +1,39 @@
+html, body {
+	width: 100%;
+}
+
+#board td{
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	border: 1px solid black;
+	margin: 1px;
+	padding: 1px;
+	border-radius: 0px;
+}
+
+#board tr{
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}
+
+#board {
+	margin: 0 auto;
+
+}
+
+#move {
+	width: 30%;
+	margin: 0 auto;
+}
+
+.outer {
+	position: relative;
+	width: 100%;
+	text-align: center;
+}
+
+.centeredText {
+	text-align: center;
+}
