@@ -73,8 +73,8 @@ module.exports = class App extends React.Component{
 		const board = this.state.board;
 
 		var vertices = boardMaker.makeVertices(h, w);
-		var successorFn = boardMaker.makeNeighborFn(board);
-		var graph = new Graph(vertices, successorFn);
+		var neighborFn = boardMaker.makeNeighborFn(board);
+		var graph = new Graph(vertices, neighborFn);
 
 		var [path, exploredOrOpen] = fnc(graph, this.start, this.end)
 		

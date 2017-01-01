@@ -34,10 +34,10 @@ module.exports = {
 			else if(squareKind == 1){ var cost = 10000;}
 			else{ var cost = 1; }
 
-			(hh > 0) && successors.push([[hh-1, ww], cost]);
-			(hh < h-1) && successors.push([[hh+1, ww], cost]);
-			(ww > 0) && successors.push([[hh, ww-1], cost]);
-			(ww < w-1) && successors.push([[hh, ww+1], cost]);
+			(hh > 0) && successors.push({neighbor: [hh-1, ww], cost});
+			(hh < h-1) && successors.push({neighbor: [hh+1, ww], cost});
+			(ww > 0) && successors.push({neighbor: [hh, ww-1], cost});
+			(ww < w-1) && successors.push({neighbor: [hh, ww+1], cost});
 			return successors
 		}
 	}
