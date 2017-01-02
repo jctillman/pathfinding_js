@@ -21,6 +21,8 @@ module.exports = class Cell extends React.Component {
 			color = "yellow"
 		}else if(content == 100){
 			color = "#55DD55"
+		}else if(content == 101){
+			color = "#777777"
 		}else if(content == 102){
 			color = "#AA6633"
 		}else if(content == 1000){

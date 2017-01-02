@@ -116,9 +116,14 @@ Input: graph, startingVertice, endingVertice
 
 Output:
 	
-	An array of [vertice, vertice, vertice] which will 
+	An array [path, closedSet]
+	
+	The path is an array of [vertice, vertice, vertice] which will 
 	reach from the startingVertice to the endingVertice
-	along the path of least cost
+	along the path of least cost.
+
+	The closedSet is just the set of closed nodes,
+	so the UI can display how much the algorithm explored.
 */
 
 function dijkstra(graph, startingVertice, endingVertice){
@@ -183,7 +188,7 @@ Output:
 
 var estimatorMaker = function(endingVertice){
 	return (vertice) => {
-		return (Math.abs(vertice[0]-endingVertice[0])+Math.abs(vertice[1]-endingVertice[1]));
+		return 2*(Math.abs(vertice[0]-endingVertice[0])+Math.abs(vertice[1]-endingVertice[1]));
 	}
 }
 
@@ -241,10 +246,15 @@ Input: graph, startingVertice, endingVertice
 	endingVertice: vertice you want to reach
 
 Output:
+
+	An array [path, closedSet]
 	
-	An array of [vertice, vertice, vertice] which will 
+	The path is an array of [vertice, vertice, vertice] which will 
 	reach from the startingVertice to the endingVertice
-	along the path of least cost
+	along the path of least cost.
+
+	The closedSet is just the set of closed nodes,
+	so the UI can display how much the algorithm explored.
 */
 
 function astar(graph, startingVertice, endingVertice){

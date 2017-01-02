@@ -4,11 +4,12 @@ const Cell = require('./cell.js');
 const Graph = require('../graph.js');
 const boardMaker = require('../utils/boardMaker');
 const pathFinders = require('../pathfinders');
+const bv = require('../utils/boardVals');
 
 //***********************************************
 //
 // WARNING: THIS CODE IS ONLY USED FOR DISPLAYING 
-// THINGS RETURNS BY THE DISKSTRA / ASTAR ALGORITHMS.
+// THINGS RETURNED BY THE DISKSTRA / ASTAR ALGORITHMS.
 //
 // SO YOU DON'T NEED TO UNDERSTAND HOW IT WORKS TO
 // FINISH THE TUTORIAL
@@ -23,49 +24,54 @@ module.exports = class App extends React.Component{
 	constructor(){
 
 		super();
+
+		//Set height, width, and offset for the 
+		//starting and ending points.
 		const height = 20;
 		const width = 30;
 		const offset = 5;
+
+		//Create start and end points.
 		this.start = [offset, offset];
 		this.end = [height-offset,width-offset]
 
+		//Make a temporary board, then switch board
+		//at start and endpoint to make sense.
 		const tmpBoard = boardMaker.makeBlank(height,width);
-		tmpBoard[this.start[0]][this.start[1]] = 51;
-		tmpBoard[  this.end[0]][  this.end[1]] = 52;
+		tmpBoard[this.start[0]][this.start[1]] = bv.START_ORIG;
+		tmpBoard[  this.end[0]][  this.end[1]] = bv.END_ORIG;
 
+		//Set the state, and bind the function which 
+		//is to be passed to the child.
 		this.state = { board: tmpBoard};
 		this.changeTerrainKind = this.changeTerrainKind.bind(this);
 	}
 
 	clearBoardOfIndicators(){
-		var newBoard = this.state.board.map(row => {
-			return row.map( a => {
-				if (a > 900) {return a - 1000;}
-				if (a > 90) {return a - 100;}
-				return a;
-			});
-		});
-		this.state.board = newBoard
+		var newBoard = bv.switchToOriginalValues(this.state.board)
+		this.state.board = newBoard;
 		this.setState({board: newBoard});
 	}
 
 	changeTerrainKind(x,y,e){
-		//console.log(e);
-		//Only do anything if the shiftkey is pressed down.
+
+		//Only do anything if some key is pressed down.
 		if(e.shiftKey || e.altKey || e.metaKey){
+
+			//If so, change the board so it just has ORIG
+			//values, thus wiping indicators of path
+			//and of exploration.
 			this.clearBoardOfIndicators();
 			
 			//Change the square that we're on
 			var tmp = this.state.board;
 			if(tmp[x][y] < 10){
-				if (e.shiftKey) { var newVal = 1; }
-				if (e.altKey) { var newVal = 2;}
-				if (e.metaKey) { var newVal = 0;}
+				if (e.shiftKey) { var newVal = bv.WALL_ORIG; }
+				if (e.altKey) { var newVal = bv.MUD_ORIG;}
+				if (e.metaKey) { var newVal = bv.GRASS_ORIG;}
 				tmp[x][y] = newVal;
 				this.setState({board: tmp});
-			}
-			
-			
+			}	
 		}
 	}
 
@@ -80,35 +86,36 @@ module.exports = class App extends React.Component{
 	calcShortest(fnc){
 		this.clearBoardOfIndicators();
 
-		const h = this.state.board.length;
-		const w = this.state.board[0].length;
+		//Set up the graph that we will give to the students 
+		//code.
 		const board = this.state.board;
-
 		var neighborFn = boardMaker.makeNeighborFn(board);
 		var graph = new Graph(neighborFn);
 
-		var [path, exploredOrOpen] = fnc(graph, this.start, this.end)
+		//Invoke the students code, and try to 
+		//get values from it
+		var [path, closed] = fnc(graph, this.start, this.end)
 		
-		var tmp = this.state.board;
+		//Check for errors if the student's code is returning invalid
+		//values--try to return something meaningful.
+		if (!path){
+			console.warn("Algorithm returned no path;."); return;}
+		if (!closed){
+			console.warn("Algorithm returned no closedSet object."); return;}
+		if (!Array.isArray(path)){
+			console.warn("Algorithm returned a path object that is not an array."); return;}
+		if (!Array.isArray(path[0])){
+			console.warn("Members of 'path' array are not vertices (i.e., [height,width])"); return;}
+		if (path.length < 5){
+			console.warn("'path' array is notably too short."); return;}
 
-		Object.keys(exploredOrOpen).forEach( (textSpot) => {
-			const split = textSpot.split(',');
-			const spot = [ parseInt(split[0]), parseInt(split[1])];
-			if (exploredOrOpen[textSpot] != 100000){
-				tmp[split[0]][split[1]] = tmp[split[0]][split[1]] + 1000;
-			}
-		})
+		//Get a display board with the values changed
+		//so that it is dark or bright depending on 
+		//where you've explored.
+		var drawn = bv.drawClosedAndPathToBoard(this.state.board,closed,path);
 
-		path.forEach((spot) => {
-			const curVal = tmp[spot[0]][spot[1]]
-			console.log(curVal)
-			if ([0,1,2,1000,1001,1002].indexOf(curVal) != -1){
-				tmp[spot[0]][spot[1]] = (tmp[spot[0]][spot[1]] % 100) + 100;
-				console.log(tmp[spot[0]][spot[1]])
-			}
-		});
-		console.log(tmp)
-		this.setState({board: tmp});
+		//Set state.
+		this.setState({board: drawn});
 
 	}
 
