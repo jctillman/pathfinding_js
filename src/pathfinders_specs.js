@@ -174,6 +174,8 @@ describe('astar finds paths', function(){
 			var fn = pathFinders.astarHelper.estimatorMaker;
 			it('returns a function', function(){
 				expect(typeof fn([1,1])).to.equal('function');
+				expect(fn([1,1])([2,2])).to.equal(2);
+				expect(fn([1,1])([1,2])).to.equal(1);
 			});
 		});
 
@@ -201,7 +203,7 @@ describe('astar finds paths', function(){
 				expect(Object.keys(fromStart).length).to.equal(0)
 			});
 
-			it('returns openSet and gScore with one element', function(){
+			it('returns openSet, gScore, fScore with one element', function(){
 				var startVertice = [1,1]
 				var estimator = pathFinders.astarHelper.estimatorMaker([2,2])
 				var {closedSet, openSet, fromStart, gScore, fScore} = fn(planeGraph, startVertice, estimator);
@@ -225,10 +227,8 @@ describe('astar finds paths', function(){
 	describe('Integration testing: That it can find paths', function(){
 
 		it("It can return the path for a simple 1d route", function(){
-
 			var [path,_] = astar(lineGraph, 1, 7);
 			expect(path).to.deep.equal([1,2,3,4,5,6,7])
-
 		});
 
 		it('It can return the path for a simple 2d route', function(){
