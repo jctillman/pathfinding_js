@@ -4,7 +4,19 @@ const Cell = require('./cell.js');
 const Graph = require('../graph.js');
 const boardMaker = require('../utils/boardMaker');
 const pathFinders = require('../pathfinders');
-//const consts = require('../consts');
+
+//***********************************************
+//
+// WARNING: THIS CODE IS ONLY USED FOR DISPLAYING 
+// THINGS RETURNS BY THE DISKSTRA / ASTAR ALGORITHMS.
+//
+// SO YOU DON'T NEED TO UNDERSTAND HOW IT WORKS TO
+// FINISH THE TUTORIAL
+//
+// But if you reallly want to go ahead and waste your time
+// you can read it; it's your life. 
+//
+//***********************************************
 
 module.exports = class App extends React.Component{
 	

@@ -20,10 +20,10 @@ module.exports = {
 			const ww = vert[1];
 			var successors = [];
 			var squareKind = board[hh][ww];
-
-			if (squareKind == 2){ var cost = 2;}
-			else if(squareKind == 1){ var cost = 10000;}
-			else{ var cost = 1; }
+ 
+			if (squareKind == 2){ var cost = 2;}         //MUD
+			else if(squareKind == 1){ var cost = 10000;} //WALL
+			else{ var cost = 1; }						 //EVERYTHING ELSE
 
 			(hh > 0) && successors.push({neighbor: [hh-1, ww], cost});
 			(hh < h-1) && successors.push({neighbor: [hh+1, ww], cost});
