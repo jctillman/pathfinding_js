@@ -21,17 +21,7 @@ Output:
 	The vertice from openSet for which the cost is least.
 */
 var closestVert =  function(graph, openSet, cost){
-	const openArr = Object.keys(openSet);
-	const initialValue = {
-		verticeDist: cost[graph.vertToStr(openArr[0])],
-		vertice: openSet[openArr[0]]};
-	const reduceFunc = (closestVertice, verticeId) => {
-		const vertice = openSet[verticeId];
-		const verticeDist = cost[verticeId];
-		const alternativeVertice = { verticeDist, vertice };
-		return ( verticeDist < closestVertice.verticeDist) ? alternativeVertice : closestVertice;
-	}
-	return openArr.reduce(reduceFunc, initialValue).vertice;
+	//Ten-ish lines of code.
 }
 
 /*
@@ -58,15 +48,7 @@ Output:
 	along the path of least cost defined by from.
 */
 var getPath = function(graph, from, endingVertice){
-	var path = [];
-	var spot = endingVertice;
-	while (from[graph.vertToStr(spot)]) {
-		path.push(spot);
-		spot = from[graph.vertToStr(spot)];
-	}
-	path.push(spot);
-	path.reverse();
-	return path;
+	//Eight or nine-ish lines of code.
 }
 
 /*
@@ -88,14 +70,7 @@ Output:
 */
 
 function dInit(graph, startingVertice){
-	const startVertId = graph.vertToStr(startingVertice);
-	const closedSet = {};
-	const openSet = {};
-	const fromStart = {};
-	const gScore = {};
-	openSet[startVertId] = startingVertice;
-	gScore[startVertId] = 0
-	return {closedSet, openSet, fromStart, gScore};
+	//Sevenish lines.
 }
 
 /*
@@ -126,43 +101,50 @@ Output:
 	so the UI can display how much the algorithm explored.
 */
 
+//This is a large function, so I've written some of it.
 function dijkstra(graph, startingVertice, endingVertice){
 
+	//You'll need to write dInit.
 	const {closedSet, openSet, fromStart, gScore} = dInit(graph, startingVertice)
 	
 	while(Object.keys(openSet).length !== 0){
 		
 		const vertice = closestVert(graph, openSet, gScore);
 		const verticeId = graph.vertToStr(vertice);
-		const verticeDist = gScore[verticeId]
+		//const verticeDist = ?
 
 		if (graph.equals(endingVertice, vertice)){
-			const path = getPath(graph, fromStart, endingVertice);
-			return [path, closedSet];
+			//?
 		}
 
-		delete openSet[verticeId];
-		closedSet[verticeId] = true;
+		//Do something with the openset and the
+		//closed set here, to do with the vertice
+		//that we just pulled from the openset.
 
 		graph.neighbors(vertice).forEach( nAndC => {
-			const neighVertice = nAndC.neighbor;
+
+			//Neighboring vertice
+			const neighVertice = nAndC.neighbor; 
+
+			//Cost of traveling from the vertice to the
+			//neighboring vertice.
 			const travelDist = nAndC.cost;
+			
+			//This might be useful.									
 			const neighVerticeId = graph.vertToStr(neighVertice);
-			if (closedSet[neighVerticeId]){return;}
 
-			if (!openSet[neighVerticeId]){
-				openSet[neighVerticeId]=neighVertice;
-			}
+			//Here's the most code you'll need to write unguided
+			//in this function.
 
-			const totalNeighborDist = travelDist + verticeDist;
-			const curDist = gScore[neighVerticeId];
-			
-			if (totalNeighborDist < curDist || curDist === undefined){
-			
-				gScore[neighVerticeId] = totalNeighborDist;
-				fromStart[neighVerticeId] = vertice;
-			
-			}
+			//You'll need to make sure (1) that the neighboring
+			//vertice isn't in the closed set, (2) potentially
+			//add the vertice to the openSet, (3) find the 
+			//distance from the start of the vertice, and
+			//set gScore appropriately if this is smaller
+			//than the current gScore (or if gScore) does not exist
+			//for it, and (4) set fromStart if you are setting
+			//the gScore.
+
 		})
 	}
 }
@@ -187,9 +169,7 @@ Output:
 */
 
 var estimatorMaker = function(endingVertice){
-	return (vertice) => {
-		return 2*(Math.abs(vertice[0]-endingVertice[0])+Math.abs(vertice[1]-endingVertice[1]));
-	}
+	//A few lines of code.
 }
 
 /*
@@ -217,16 +197,7 @@ Output:
 */
 
 function aInit(graph, startingVertice, estimator){
-	const startVertId = graph.vertToStr(startingVertice);
-	const closedSet = {};
-	const openSet = {};
-	const fromStart = {};
-	const gScore = {};
-	const fScore = {};
-	openSet[startVertId] = startingVertice;
-	gScore[startVertId] = 0;
-	fScore[startVertId] = estimator(startingVertice);
-	return {closedSet, openSet, fromStart, gScore, fScore};
+	//Ten or so lines
 }
 
 /*
@@ -259,45 +230,39 @@ Output:
 
 function astar(graph, startingVertice, endingVertice){
 
+	//You'll need to construct estimatorMaker and aInit
 	const estimator = estimatorMaker(endingVertice)
 	const {closedSet, openSet, fromStart, gScore, fScore} = aInit(graph, startingVertice, estimator)
 	
 	while(Object.keys(openSet).length !== 0){
 		
-		const vertice = closestVert(graph, openSet, fScore);
+		//You may use the same closestVert function as in 
+		//dijkstra, but you might want to use different
+		//arguments to it...
+		//const vertice = ?
 		const verticeId = graph.vertToStr(vertice);
-		const verticeDist = gScore[verticeId]
+		//const verticeDist = ?
 		
 		if (graph.equals(endingVertice, vertice)){
-			const path = getPath(graph, fromStart, endingVertice);
-			return [path, closedSet];
+			//You can use the same thing here as in dijkstra
 		}
 
-		delete openSet[verticeId];
-		closedSet[verticeId] = true;
+		//Same thing here to do with openSet
+		//and closedSet as in dijkstra.
 
 		graph.neighbors(vertice).forEach( nAndC => {
-			const neighVertice = nAndC.neighbor;
+			//Neighboring vertice
+			const neighVertice = nAndC.neighbor; 
+
+			//Cost of traveling from the vertice to the
+			//neighboring vertice.
 			const travelDist = nAndC.cost;
+			
+			//This might be useful.									
 			const neighVerticeId = graph.vertToStr(neighVertice);
-			if (closedSet[neighVerticeId]){return;}
 
-			if (!openSet[neighVerticeId]){
-				openSet[neighVerticeId]=neighVertice;
-			}
-
-			const totalNeighborDist = travelDist + verticeDist;
-			const curDist = gScore[neighVerticeId];
+			//Similar here to dijkstra, with some minor changes...
 			
-			if (totalNeighborDist < curDist || curDist == undefined){
-			
-				gScore[neighVerticeId] = totalNeighborDist;
-				fromStart[neighVerticeId] = vertice;
-
-				const estimated = estimator(neighVertice)
-				fScore[neighVerticeId] = gScore[neighVerticeId] + estimated
-			
-			}
 		})
 	}
 }
