@@ -10,11 +10,11 @@
 
 closestVert:
 
-Input:
+Input: openSet, cost
 
-	openSet: A object map from vertexId to a vertex, 
-	containing all of the open nodes from which one
-	wishes to select the closest.
+	openSet: A object mapping from a vertexId to a
+	vertex, containing all of the open nodes from
+	which one wishes to select the closest.
 	The format is {vertexId: vertexInstance}, etc.
 	So if a vertex was a two-dimensional point formed
 	from an array, and if the vertexId was formed
@@ -25,7 +25,7 @@ Input:
 		..etc.
 	}
 
-	cost: An object map from a vertexId to a cost.
+	cost: An object mapping from a vertexId to a cost.
 	The format is {vertexId: cost}, etc.
 	So if a vertex was a two-dimensional point formed
 	from an array, and if the vertexId was formed
