@@ -8,16 +8,18 @@
 
 /*
 
-closestVert:
+closestVert: Gets the vertex with the least
+cost from the opensSet.
 
 Input: openSet, cost
 
 	openSet: A object mapping from a vertexId to a
 	vertex, containing all of the open nodes from
-	which one wishes to select the closest.
+	which one wishes to select the one with the 
+	least cost.
 	The format is {vertexId: vertexInstance}, etc.
-	So if a vertex was a two-dimensional point formed
-	from an array, and if the vertexId was formed
+	So if a vertex is a two-dimensional point formatted
+	as an array [1,1], and if the vertexId was formed
 	by vertex.toString(), it would look like this:
 	{
 		'1,1': [1,1],
@@ -27,8 +29,8 @@ Input: openSet, cost
 
 	cost: An object mapping from a vertexId to a cost.
 	The format is {vertexId: cost}, etc.
-	So if a vertex was a two-dimensional point formed
-	from an array, and if the vertexId was formed
+	So if a vertex was a two-dimensional point formatted
+	as an array [1,1], and if the vertexId was formed
 	by vertex.toString(), it would look like this:
 	{
 	    '1,1':0,
@@ -58,17 +60,19 @@ var closestVert =  function(openSet, cost){
 
 /*
 
-getPath:
+getPath: Gets the fastest path to an endVertex
+given a particular kind of map.
 
-Input:
+Input: from, endVertex
 
 	from: A map from a vertexId to a vertex - from
 	the id of one vertex to the neighboring vertex
 	from which one would come if one were following
-	the least-cost path from a starting point.
+	the least-cost path from a starting point to
+	the vertexId's vertex.
 	I.e., the vertexId is not the id for the vertex
 	to which it maps, but is the id for the vertex
-	from which one would approach the first vertex
+	from which one would approach the id-vertex
 	if one were following the least-cost-path from
 	the start.
 	Format: {
@@ -76,8 +80,11 @@ Input:
 		'2,2': [1,2],
 		etc
 	}
+	This says that the fastest way to [2,2] is
+	via from [1,2] and the fastest way to [1,2]
+	is from [1,1].
 
-	endingVertice: The vertex that we want to find
+	endVertex: The vertex that we want to find
 	the least-cost-path to from the start.
 
 Output:
@@ -101,19 +108,21 @@ var getPath = function(from, endingVertice){
 
 /*
 
-dInit:
+dInit: Gets initial variables for 
+dijkstra's algorithm.
 
-Input: startingVertex
+Input: startVertex
 
-	startingVertex: vertex you are starting at
+	startVertex: vertex you are starting at
 
 Output:
 	
 	An object with {closedSet, openSet, from, cost}
-	properties.  openSet should be initialized to
-	map from the startingVertexId to the starting
-	vertex, and cost to map from the startingVertex
-	to 0.  The other two should simply be empty 
+	properties.
+	openSet should be initialized to map from the
+	startVertexId to the starting vertex, and
+	cost to map from the startVertexId to 0.
+	The other two should simply be empty 
 	objects.
 
 */
@@ -131,7 +140,8 @@ function dInit(startingVertice){
 
 /*
 
-dijkstra:
+dijkstra: Finds the fastest path from
+startVertex to endVertex in the graph.
 
 Input: graph, startingVertice, endingVertice
 
@@ -144,7 +154,7 @@ Input: graph, startingVertice, endingVertice
 		vertices with the cost to get there.
 		So it might take, for instance [1,1]
 		and return [{neighbor: [1,2], cost: 1},
-		{neighbor: [2,1], cost: 1}] and so on.
+		{neighbor: [2,1], cost: 1},...] and so on.
 
 		graph.equals takes two vertexes and
 		returns true if they are equals. This
