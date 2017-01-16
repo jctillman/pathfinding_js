@@ -3,7 +3,7 @@
 
 	Namely, it wraps up--
 
-	1. neighborFn: Takes a vertice, returns an array of {vertice, cost}
+	1. neighborFn: Takes a vertex, returns an array of {vertice, cost}
 	objects where the vertice is a neighboring vertice and the cost is the cost
 	to arrive move from the original vertice to the neighboring vertice.
 
@@ -21,14 +21,14 @@ function Graph(neighborFn, identFn, toStr){
 	this.toStr = toStr || function(n){return n.toString()};
 }
 
-Graph.prototype.neighbors = function(vertice){
-	return this.neighborFn(vertice);
+Graph.prototype.neighbors = function(vertex){
+	return this.neighborFn(vertex);
 }
-Graph.prototype.equals = function(verticeOne, verticeTwo){
-	return this.identFn(verticeOne, verticeTwo);
+Graph.prototype.equals = function(vertexOne, vertexTwo){
+	return this.identFn(vertexOne, vertexTwo);
 }
-Graph.prototype.vertToStr = function(vertice){
-	return this.toStr(vertice);
+Graph.prototype.vertToStr = function(vertex){
+	return this.toStr(vertex);
 }
 
 module.exports = Graph;
