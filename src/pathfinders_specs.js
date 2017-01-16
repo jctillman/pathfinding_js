@@ -37,110 +37,62 @@ describe("Dijkstra finds paths", function(){
 
 	//You can skip all these, and write the dijkstra function directly
 	//However, if you write all of these functions, dijkstra will itself
-	//only require about six lines.
+	//require fewer lines
 	describe('Unit Testing: That sub-sections used for finding paths work', function(){
 
-		describe('dInit: Creates the closedSet, openSet, fromStart, gScore variables', function(){
+		it('dInit: Creates the closedSet, openSet, from, cost and variables', function(){
 
 			var fn = pathFinders.dijsktraHelper.dInit;
+			var startVertice = 1
+			var {closedSet, openSet, from, cost} = fn(startVertice);
+			expect(closedSet != undefined).to.equal(true)
+			expect(openSet != undefined).to.equal(true)
+			expect(from != undefined).to.equal(true)
+			expect(cost != undefined).to.equal(true)
 
-			it ('returns closedSet, openSet, fromStart, gScore in an object', function(){
-				var startVertice = 1
-				var {closedSet, openSet, fromStart, gScore} = fn(lineGraph, startVertice);
-				expect(closedSet != undefined).to.equal(true)
-				expect(openSet != undefined).to.equal(true)
-				expect(fromStart != undefined).to.equal(true)
-				expect(gScore != undefined).to.equal(true)
-			});
-
-			it('returns closedSet and fromStart empty', function(){
-				var startVertice = 1
-				var {closedSet, openSet, fromStart, gScore} = fn(lineGraph, startVertice);
-				expect(Object.keys(closedSet).length).to.equal(0)
-				expect(Object.keys(fromStart).length).to.equal(0)
-			});
-
-			it('returns openSet and gScore with one element', function(){
-				var startVertice = 1
-				var {closedSet, openSet, fromStart, gScore} = fn(lineGraph, startVertice);
-				expect(Object.keys(openSet).length).to.equal(1)
-				expect(Object.keys(gScore).length).to.equal(1)
-				//The open set has the starting vertice only, to start with
-				expect(openSet['1'] == startVertice)
-				//While gScore is set for zero for that vertice, because there 
-				//is no cost to getting to it.
-				expect(gScore['1'] == 0)
-			});
+			//The open set has the starting vertice only, to start with
+			expect(openSet['1'] == startVertice)
+			//While cost is set for zero for that vertice,
+			//because there is no cost to getting to it.
+			expect(cost['1'] == 0)
 			
 		});
 
-		describe('closestVert: returns info about the closest vertice to the start in allVertices', function(){
-
-			it('"vertice" should be the kind of thing in the graphs list of vertices', function(){
-
-				//So, for a the lineGraph graph, vertice should be 
-				//a number
-				var startVertice = 1;
-				var init = pathFinders.dijsktraHelper.dInit;
-				var {closedSet, openSet, fromStart, gScore} = init(lineGraph, startVertice);
-
-				var fn = pathFinders.dijsktraHelper.closestVert;
-				var vertice = fn(lineGraph, openSet, gScore)
-				expect(typeof vertice).to.equal('number');
-
-				//while, for the planeGraph graph, vertice should 
-				//be an array with two elements.
-				var startVertice = [1,1];
-				var init = pathFinders.dijsktraHelper.dInit;
-				var {closedSet, openSet, fromStart, gScore} = init(planeGraph, startVertice);
-
-				var fn = pathFinders.dijsktraHelper.closestVert;
-				var vertice = fn(lineGraph, openSet, gScore);
-				expect(Array.isArray(vertice)).to.equal(true);
-				expect(vertice.length).to.equal(2);
-				
-
-			});
-
-			it('returns the closest vertices, given a particular map of costs', function(){
-
-
-				var startVertice = 1;
-				var init = pathFinders.dijsktraHelper.dInit;
-				var {closedSet, openSet, fromStart, gScore} = init(lineGraph, startVertice);
-				gScore[3] = 3;
-				gScore[4] = 3;
-				var fn = pathFinders.dijsktraHelper.closestVert;
-
-				var vertice = fn(lineGraph, openSet, gScore)
-				expect(vertice).to.equal(1);
+		it('closestVert: returns the cheapest vertex from a set of open vertexes', function(){
+			var fn = pathFinders.dijsktraHelper.closestVert;
+			var openSet = {
+				'1,2': [1,2],
+				'2,2': [2,2]
+			}
+			var cost = {
+				'1,1' : 0,
+				'1,2' : 1,
+				'2,1' : 1,
+				'2,2' : 1}
 			
-			})
-
+			var vertex = fn(openSet, cost);
+			expect(Array.isArray(vertex)).to.equal(true);
+			expect(vertex.length).to.equal(2);
+			expect(vertex[0]).to.equal(1);
+			expect(vertex[1]).to.equal(2);
 		});
 
-		describe('getPath: creates a path from the closestToStart map', function(){
+		it('getPath: creates a path from the "from" map', function(){
 
-			it('does what it says on the box', function(){
-
-				var getPath = pathFinders.dijsktraHelper.getPath;
-				var endingVertice = 7
-				var closestToStart = {
-					1: null,
-					2: 1,
-					3: 2,
-					4: 3,
-					5: 4,
-					6: 5,
-					7: 6
-				};
-				var path = getPath(lineGraph, closestToStart, endingVertice);
-				expect(path).to.deep.equal([1,2,3,4,5,6,7])
-
-			});
-
-		})
-
+			var getPath = pathFinders.dijsktraHelper.getPath;
+			var endingVertice = 5
+			var from = {
+				1: null,
+				2: 1,
+				3: 2,
+				4: 3,
+				5: 4,
+				6: 5,
+				7: 6
+			};
+			var path = getPath(from, endingVertice);
+			expect(path).to.deep.equal([1,2,3,4,5])
+		});
 
 	});
 
@@ -170,55 +122,35 @@ describe('astar finds paths', function(){
 
 	describe('Unit Testing: Sub-sections used in finding paths work', function(){
 
-		describe('estimatorMaker: Helps get manhattan distance between a start and ending', function(){
-			var fn = pathFinders.astarHelper.estimatorMaker;
-			it('returns a function', function(){
+		it('estimatorMaker: Helps get manhattan distance between a start and ending', function(){
+				var fn = pathFinders.astarHelper.estimatorMaker;
 				expect(typeof fn([1,1])).to.equal('function');
 				expect(fn([1,1])([2,2])).to.equal(2);
 				expect(fn([1,1])([1,2])).to.equal(1);
-			});
 		});
 
-		describe('aInit: Returns all the variables desired', function(){
+		it('aInit: Returns closedSet, openSet, fromStart, gScore, fScore in an object', function(){
 
 			var fn = pathFinders.astarHelper.aInit;
+			var startVertex = [1,1]
+			var endVertex = [2,2]
+			var estimator = pathFinders.astarHelper.estimatorMaker(endVertex)
+			var {closedSet, openSet, from, gScore, fScore} = fn(startVertex, estimator);
 
-			it ('returns closedSet, openSet, fromStart, gScore, fScore in an object', function(){
-				var startVertice = [1,1]
-				var estimator = pathFinders.astarHelper.estimatorMaker([2,2])
-				var {closedSet, openSet, fromStart, gScore, fScore} = fn(planeGraph, startVertice, estimator);
-				expect(closedSet != undefined).to.equal(true)
-				expect(openSet != undefined).to.equal(true)
-				expect(fromStart != undefined).to.equal(true)
-				expect(gScore != undefined).to.equal(true)
-				expect(fScore != undefined).to.equal(true)
-			});
+			expect(closedSet != undefined).to.equal(true)
+			expect(openSet != undefined).to.equal(true)
+			expect(from != undefined).to.equal(true)
+			expect(gScore != undefined).to.equal(true)
+			expect(fScore != undefined).to.equal(true)
 
-			it('returns closedSet and fromStart empty', function(){
-
-				var startVertice = [1,1]
-				var estimator = pathFinders.astarHelper.estimatorMaker([2,2])
-				var {closedSet, openSet, fromStart, gScore, fScore} = fn(planeGraph, startVertice, estimator);
-				expect(Object.keys(closedSet).length).to.equal(0)
-				expect(Object.keys(fromStart).length).to.equal(0)
-			});
-
-			it('returns openSet, gScore, fScore with one element', function(){
-				var startVertice = [1,1]
-				var estimator = pathFinders.astarHelper.estimatorMaker([2,2])
-				var {closedSet, openSet, fromStart, gScore, fScore} = fn(planeGraph, startVertice, estimator);
-				
-				expect(Object.keys(openSet).length).to.equal(1)
-				expect(Object.keys(gScore).length).to.equal(1)
-				//The open set has the starting vertice only, to start with
-				expect(openSet['1,1'] == startVertice).to.equal(true)
-				//While gScore is set for zero for that vertice, because there 
-				//is no cost to getting to it.
-				expect(gScore['1,1'] == 0).to.equal(true)
-				//fScore should be set to the initial estimated
-				//distance between the start and the end
-				expect(fScore['1,1'] == estimator([1,1])).to.equal(true)
-			});
+			//The open set has the starting vertice only, to start with
+			expect(openSet['1,1'] == startVertex).to.equal(true)
+			//While gScore is set for zero for that vertice, because there 
+			//is no cost to getting to it.
+			expect(gScore['1,1'] == 0).to.equal(true)
+			//fScore should be set to the initial estimated
+			//distance between the start and the end
+			expect(fScore['1,1'] == estimator([1,1])).to.equal(true)
 			
 		});
 
