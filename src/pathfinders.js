@@ -8,12 +8,14 @@
 
 /*
 closestVert: Gets the vertex with the least
-cost from the opensSet.
+cost from the openSet.
+
 Input: openSet, cost
-	openSet: A object mapping from a vertexId to a
-	vertex, containing all of the open nodes from
-	which one wishes to select the one with the 
-	least cost.
+
+	openSet: A object mapping from a vertexId to the
+	vertex for that vertexId, containing all of
+	the open nodes from which one wishes to select
+	the one with the least cost.
 	The format is {vertexId: vertexInstance}, etc.
 	So if a vertex is a two-dimensional point formatted
 	as an array [1,1], and if the vertexId was formed
@@ -23,6 +25,7 @@ Input: openSet, cost
 		'1,2': [1,2],
 		..etc.
 	}
+
 	cost: An object mapping from a vertexId to a cost.
 	The format is {vertexId: cost}, etc.
 	So if a vertex was a two-dimensional point formatted
@@ -33,6 +36,7 @@ Input: openSet, cost
 	    '1,2':1,
 	    ...
 	}
+
 Output:
 	
 	The vertex from openSet for which the cost is least.
@@ -44,8 +48,10 @@ var closestVert =  function(openSet, cost){
 
 /*
 getPath: Gets the fastest path to an endVertex
-given a particular kind of map.
+given a particular kind of object.
+
 Input: from, endVertex
+
 	from: A map from a vertexId to a vertex - from
 	the id of one vertex to the neighboring vertex
 	from which one would come if one were following
@@ -64,8 +70,10 @@ Input: from, endVertex
 	This says that the fastest way to [2,2] is
 	via from [1,2] and the fastest way to [1,2]
 	is from [1,1].
+
 	endVertex: The vertex that we want to find
 	the least-cost-path to from the start.
+
 Output:
 	
 	An array of vertices leading from the starting
@@ -80,8 +88,11 @@ var getPath = function(from, endingVertice){
 /*
 dInit: Gets initial variables for 
 dijkstra's algorithm.
+
 Input: startVertex
+
 	startVertex: vertex you are starting at
+
 Output:
 	
 	An object with {closedSet, openSet, from, cost}
@@ -101,23 +112,30 @@ function dInit(startingVertice){
 /*
 dijkstra: Finds the fastest path from
 startVertex to endVertex in the graph.
+
 Input: graph, startingVertice, endingVertice
+
 	graph: An instance of Graph class.  It might be
 	useful because it has two methods on it:
 	neighbors and equals.
+
 		graph.neighbors takes a vertex and 
 		return an array of the neighboring 
 		vertices with the cost to get there.
 		So it might take, for instance [1,1]
 		and return [{neighbor: [1,2], cost: 1},
 		{neighbor: [2,1], cost: 1},...] and so on.
+
 		graph.equals takes two vertexes and
-		returns true if they are equals. This
+		returns true if they are equal. This
 		might be useful because [1,1] != [1,1]
 		in javascript, because arrays are compared
 		by reference.
+
 	startVerex: vertex you are starting at
+
 	endVertex: vertex that you want to reach
+
 Output:
 	
 	An array [path, closedSet]
@@ -146,7 +164,7 @@ function dijkstra(graph, startVertex, endVertex){
 			return [path, closedSet];
 		}
 
-		//Something to do with oen and closed set
+		//Something to do with open and closed set
 		//should be inserted here...
 
 		graph.neighbors(vertex).forEach( nAndC => {
@@ -168,10 +186,13 @@ function dijkstra(graph, startVertex, endVertex){
 
 /*
 estimatorMaker:
+
 Input: endVertex
+
 	endVertex: vertice that one is trying to reach
 	It will be an array [n,m] indicating a point
 	at the n x m spot in the 2d plane.
+
 Output:
 	
 	A function that takes a vertex ([n,m]) and returns
@@ -194,11 +215,14 @@ var estimatorMaker = function(endVertex){
 
 /*
 aInit:
+
 Input: startVertex, estimator
+
 	startVertex: vertex you are starting at.
 	estimator: a function taking a vertex, and
 	returning the minimum possible optimistic
 	cost between that vertex and an ending vertex.
+
 Output:
 	
 	An object with {closedSet, openSet, from, gScore, fScore}
@@ -216,9 +240,11 @@ function aInit(startVertex, estimator){
 
 /*
 astar:
+
 Input: graph, startingVertice, endingVertice
 	These are exactly the same as for the 
 	dijkstra function above.
+
 Output:
 	An array [path, closedSet].  These are 
 	also exactly the same as for the dijkstra 
@@ -228,8 +254,8 @@ Output:
 function astar(graph, startVertex, endVertex){
 	//Cut-and-paste you dijkstra code
 	//to this, then make the modficiations
-	//pertaining to aInit, to using the
-	//estimator function, and to using fScore.
+	//pertaining (1) to aInit, (2) to using the
+	//estimator function, and (3) to using fScore.
 }
 
 

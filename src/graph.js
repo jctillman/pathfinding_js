@@ -8,10 +8,6 @@
 	to arrive move from the original vertice to the neighboring vertice.
 
 	2. identFn: Takes two vertices and returns true if they are identical
-
-	3. toStr: Takes a vertice, and returns it to a string identifier.
-	This is useful when you want to store a (verticeId -> some quality of
-	vertice) map in an object.
 */
 
 function Graph(neighborFn, identFn, toStr){
@@ -26,9 +22,6 @@ Graph.prototype.neighbors = function(vertex){
 }
 Graph.prototype.equals = function(vertexOne, vertexTwo){
 	return this.identFn(vertexOne, vertexTwo);
-}
-Graph.prototype.vertToStr = function(vertex){
-	return this.toStr(vertex);
 }
 
 module.exports = Graph;
