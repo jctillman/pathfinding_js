@@ -61,7 +61,7 @@ describe("Dijkstra finds paths", function(){
 
 			//closedSet and from should simply be empty
 			expect(Object.keys(closedSet).length).to.equal(0)
-			expect(Object.keys(fromSet).length).to.equal(0)
+			expect(Object.keys(from).length).to.equal(0)
 
 			//openSet and cost should not be empty.
 			//The open set has the starting vertice only, to start with
