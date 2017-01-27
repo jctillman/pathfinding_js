@@ -1,9 +1,12 @@
 //TEST SPEC FOR "PATHFINDERS.jS"
-//"pathfinders.js" is the only file that needs
-//to be modified for the tutorial.
 //
-//You may wish to look at graph.js, to understand what that does
-//but if you look anywhere else that will be useless.
+// "pathfinders.js" is the only file that needs
+// to be modified for the tutorial.
+//
+// You may wish to look at graph.js,
+// to understand what that does.
+// But if you look anywhere else that
+// will probably be a waste of time.
 var expect = require('chai').expect;
 var Graph = require('./graph.js');
 
@@ -20,7 +23,11 @@ var astar = pathFinders.astar;
 //LINE GRAPH -- Represents a 1d line, that one can travel up and down.
 //
 var lineNeighborFn = function(vert){
-	return [ {neighbor: vert+1, cost:1}, {neighbor: vert-1, cost:1}  ]; };
+	return [
+		{neighbor: vert+1, cost:1},
+		{neighbor: vert-1, cost:1}
+		];
+	};
 var lineGraph = new Graph(lineNeighborFn);
 
 var planeNeighborFn = function(vert){
@@ -35,9 +42,9 @@ var planeGraph = new Graph(planeNeighborFn);
 
 describe("Dijkstra finds paths", function(){
 
-	//You can skip all these, and write the dijkstra function directly
-	//However, if you write all of these functions, dijkstra will itself
-	//require fewer lines
+	// You can skip all these, and write the dijkstra function directly
+	// However, if you write all of these functions, dijkstra will
+	// require fewer lines
 	describe('Unit Testing: That sub-sections used for finding paths work', function(){
 
 		it('dInit: Creates the closedSet, openSet, from, cost and variables', function(){
@@ -45,31 +52,45 @@ describe("Dijkstra finds paths", function(){
 			var fn = pathFinders.dijsktraHelper.dInit;
 			var startVertice = 1
 			var {closedSet, openSet, from, cost} = fn(startVertice);
+
+			//Check that closedSet, openSet, from, and cost exist.
 			expect(closedSet != undefined).to.equal(true)
 			expect(openSet != undefined).to.equal(true)
 			expect(from != undefined).to.equal(true)
 			expect(cost != undefined).to.equal(true)
 
+			//closedSet and from should simply be empty
+			expect(Object.keys(closedSet).length).to.equal(0)
+			expect(Object.keys(from).length).to.equal(0)
+
+			//openSet and cost should not be empty.
 			//The open set has the starting vertice only, to start with
-			expect(openSet['1'] == startVertice)
+			expect(openSet['1'] == startVertice).to.equal(true)
 			//While cost is set for zero for that vertice,
 			//because there is no cost to getting to it.
-			expect(cost['1'] == 0)
+			expect(cost['1'] == 0).to.equal(true)
 			
 		});
 
 		it('closestVert: returns the cheapest vertex from a set of open vertexes', function(){
+
 			var fn = pathFinders.dijsktraHelper.closestVert;
+			//Create an openSet with two points.
 			var openSet = {
 				'1,2': [1,2],
 				'2,2': [2,2]
 			}
+			//And a cost map with four pints.
 			var cost = {
 				'1,1' : 0,
 				'1,2' : 1,
 				'2,1' : 1,
-				'2,2' : 1}
+				'2,2' : 2
+			}
 			
+			// "vertex" should be [1,2], because that
+			// is the member of openSet with the least
+			// cost.
 			var vertex = fn(openSet, cost);
 			expect(Array.isArray(vertex)).to.equal(true);
 			expect(vertex.length).to.equal(2);
@@ -79,6 +100,12 @@ describe("Dijkstra finds paths", function(){
 
 		it('getPath: creates a path from the "from" map', function(){
 
+			// Given a graph in which the nodes are
+			// the integers (1,2,3, etc), and each
+			// integer is connected to the immediately
+			// higher / lower integers (so 5 has 6 and
+			// 4 as neighbors) this should find the path
+			// from 1 to 5, i.e., an array [1,2,3,4,5]
 			var getPath = pathFinders.dijsktraHelper.getPath;
 			var endingVertice = 5
 			var from = {
@@ -105,7 +132,7 @@ describe("Dijkstra finds paths", function(){
 
 		});
 
-		it('It can return the path for a simple 2d route', function(){
+		it('It can return the path for a very simple 2d route', function(){
 
 			var [pathOne,_] = dijkstra(planeGraph, [1,1], [1,3]);
 			var [pathTwo,_] = dijkstra(planeGraph, [3,1], [1,1]);
